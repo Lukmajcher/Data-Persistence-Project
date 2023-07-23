@@ -15,17 +15,16 @@ using UnityEditor;
 public class MenuUIHandler : MonoBehaviour
 {
     [SerializeField] private TMP_InputField _nameInputField;
-    [SerializeField] private TextMeshProUGUI _playerNameText;
-
+    [SerializeField] private TextMeshProUGUI _highscoreText;
 
     private string _playerName;
 
     private void Start()
     {
-        if (SceneManager.GetActiveScene().buildIndex == 1)
-        {
-            NamePlayer();
-        }
+        if (Highscore.Instance.HighScore == 0)
+            _highscoreText.SetText(string.Empty);
+        else
+            _highscoreText.SetText($"Highscore: {Highscore.Instance.PlayerNameHighscore} - {Highscore.Instance.HighScore} score");
     }
 
     public void SetPlayerName(string input)
@@ -34,8 +33,7 @@ public class MenuUIHandler : MonoBehaviour
             return;
 
         _playerName = _nameInputField.text;
-        GameManager.Instance.Name = _playerName;
-        Debug.Log(GameManager.Instance.Name);
+        Highscore.Instance.PlayerName = _playerName;
     }
 
     public void StartGame() 
@@ -50,20 +48,11 @@ public class MenuUIHandler : MonoBehaviour
 
     public void QuitGame()
     {
+        Highscore.Instance.SaveHighscores();
         #if UNITY_EDITOR
             EditorApplication.ExitPlaymode();
         #else
             Application.Quit();
         #endif
-    }
-
-    public void BackToMenu()
-    {
-        SceneManager.LoadScene(0);
-    }
-
-    private void NamePlayer()
-    {
-        _playerNameText.text = GameManager.Instance.Name;
     }
 }

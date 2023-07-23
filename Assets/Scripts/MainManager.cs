@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,11 +12,12 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
-    public static Text HighScoreText;
+    public Text HighScoreText;
     public GameObject GameOverText;
-    
+
     private bool m_Started = false;
     private int m_Points;
+    private int _highscore = 0;
     
     private bool m_GameOver = false;
 
@@ -56,6 +58,7 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
@@ -71,5 +74,16 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+        HighscoreUpdate();
+    }
+
+    public void HighscoreUpdate()
+    {
+        if (Highscore.Instance.HighScore < m_Points)
+        {
+            _highscore = m_Points;
+            Highscore.Instance.HighScore = _highscore;
+            Highscore.Instance.PlayerNameHighscore = Highscore.Instance.PlayerName;
+        }
     }
 }
